@@ -1,0 +1,55 @@
+syntax = "proto3";
+
+package schedule;
+
+// Request sent from Laravel to Python
+message ScheduleRequest {
+  repeated Teacher teachers = 1;
+  repeated ClassRoom classes = 2;
+  repeated Subject subjects = 3;
+  repeated ExistingSchedule existing = 4;
+}
+
+message Teacher {
+  int32 id = 1;
+  string name = 2;
+  repeated string available_times = 3;
+}
+
+message ClassRoom {
+  int32 id = 1;
+  string name = 2;
+  int32 capacity = 3;
+}
+
+message Subject {
+  int32 id = 1;
+  string name = 2;
+  int32 teacher_id = 3;
+  int32 hours_per_week = 4;
+}
+
+message ExistingSchedule {
+  int32 id = 1;
+  int32 class_id = 2;
+  int32 subject_id = 3;
+  string day = 4;
+  string time_slot = 5;
+}
+
+// Response from Python AI engine
+message ScheduleResponse {
+  repeated GeneratedLesson lessons = 1;
+}
+
+message GeneratedLesson {
+  int32 class_id = 1;
+  int32 subject_id = 2;
+  int32 teacher_id = 3;
+  string day = 4;
+  string time_slot = 5;
+}
+
+service SchedulerService {
+  rpc GenerateSchedule(ScheduleRequest) returns (ScheduleResponse);
+}
