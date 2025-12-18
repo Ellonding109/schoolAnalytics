@@ -1,5 +1,8 @@
 import mysql.connector
+import pandas as pd
+import numpy as np 
 from mysql.connector import Error
+
 class database:
     def __init__(self,host,database, user, passwd):
         self.host = host
@@ -164,3 +167,51 @@ class QueryBuilder:
         self.limit(1)
         query, params = self._build_query()
         return self.db.fetch_one(query, params)
+
+"""
+
+    load the dataset to be used in the model for random forest
+
+"""
+
+query = """
+    SELECT 
+        s.user_id
+        s.gender
+        s.student_type
+        s.takes_lunch
+        s.uses_transport
+        er.student_id
+        er.subject_id 
+        er.score
+        er.teache_id
+        er.class_id
+        a.student_id
+        a.status
+        a.class_id
+        hs.status
+        hs.grade
+        hs.student_id
+
+    FROM students s 
+    JOIN attendance a ON a.student_id = s.user_id
+    JOIN exams_results er ON er.students_id = s.student_id
+    JOIN homework_submissions hs ON hs.student_id = a.student_id
+
+"""
+
+# convert the data to a dataframe 
+# load the dataset to be used here
+
+df = pd.read_sql(query,db)
+# get the missing values in the datbase
+
+print(df.isnull().sum())
+
+y
+
+print(df)
+
+# clean the data 
+
+
